@@ -8,7 +8,7 @@
 
 Both `git merge` and `git rebase` can combine work between branches.
 
-Just as the name **rebase** indicates, `git rebase` will make the current branch based on the target branch
+Just as the name "**rebase**" indicates, `git rebase` will make the current branch based on the target branch
 
 Rebase takes a set of commits: "copy" them, them plops them down somewhere else.
 
