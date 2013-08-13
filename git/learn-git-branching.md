@@ -8,7 +8,7 @@
 
 Both `git merge` and `git rebase` can combine work between branches.
 
-Just as the name "**rebase**" indicates, `git rebase` will make the current branch based on the target branch
+Just as the name **rebase** indicates, `git rebase` will make the current branch based on the target branch
 
 Rebase takes a set of commits: "copy" them, them plops them down somewhere else.
 
@@ -18,7 +18,7 @@ Rebase takes a set of commits: "copy" them, them plops them down somewhere else.
 
 > HEAD is the symbolic name for the currently checked out commit.
 
-Normally HEAD points to the branch name. But you can detach it by `git checkout COMMIT`. Then HEAD will points to the commit "**COMMIT**".
+Normally HEAD points to the branch name. But you can detach it by `git checkout COMMIT`. Then HEAD will points to the commit **COMMIT**.
 
 ##commit hash
 
@@ -39,7 +39,7 @@ There're two ways to achieves this goal: `git reset` and `git revert`.
 
 ### `git reset HEAD~2`
 
-"**rewrite**" the commit log/history, as if the commits **after** `HEAD~2` has never been made in the first place.
+**rewrite the commit log/history, as if the commits **after** `HEAD~2` has never been made in the first place.
 
 ### `git revert HEAD~2`
 
