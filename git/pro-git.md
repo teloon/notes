@@ -13,7 +13,7 @@ The three states:
 
 1. modified
 2. staged
-3. committed
+3. committed 
 
 ## 1.5 Git Config
 
