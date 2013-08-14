@@ -15,6 +15,8 @@ The three states:
 2. staged
 3. committed 
 
+![lifecycle](res/lifecycle.png)
+
 ## 1.5 Git Config
 
 Configure files:
@@ -32,5 +34,26 @@ Check setttings: `git config --list`
 * `git help <verb>`
 * `git <verb> --help`
 * `man git-<verb>`
+
+## 2.2.3 Staging Modified Files
+
+`git add <FILE>`, BANG!
+
+**Note**:the status of a file can be both staged and unstaged. If it is commited now, the version of the file is the version of the staged file, not the one currently working on.
+
+Git can also stage certain parts of a file, that is **stage patch**. Check interactive staging: `git add -i`.
+
+## 2.2.4 ignoring files
+
+Sample **.gitignore** file:
+
+```
+# a comment  this is ignored
+*.a       # no .a files
+!lib.a    # but do track lib.a, even though you’re ignoring .a files above
+/TODO     # only ignore the root TODO file, not subdir/TODO
+build/    # ignore all files in the build/ directory
+doc/*.txt # ignore doc/notes.txt, but not doc/server/arch.txt
+```
 
 [1]: http://git-scm.com/book
