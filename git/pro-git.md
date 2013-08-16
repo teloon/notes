@@ -55,7 +55,7 @@ Sample **.gitignore** file:
 build/    # ignore all files in the build/ directory
 doc/*.txt # ignore doc/notes.txt, but not doc/server/arch.txt
 ```
-## 2.2.5 Viewing Staged and Unstaged Changes)
+## 2.2.5 Viewing Staged and Unstaged Changes
 
 Roughly: `git status`.
 
@@ -185,8 +185,25 @@ git config --global alias.st status
 git config --global alias.unstage 'reset HEAD --'
 git config --global alias.last 'log -1 HEAD'
 ```
-
+ 
 [1]: http://git-scm.com/book
 [2]: http://pcottle.github.io/learnGitBranching/
 [zsh-bug]: https://github.com/robbyrussell/oh-my-zsh/issues/521
 [git-log-format]: http://www.jukie.net/bart/blog/pimping-out-git-log
+
+## 3.1 How Git Branch Works?
+
+Single commit repository data:
+
+![img](res/commit-object.png)
+
+**NOTE**:Git doesn’t store data as a series of changesets or deltas, but instead as a series of snapshots.
+
+
+
+
+
+
+
+
+
