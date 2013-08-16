@@ -185,7 +185,7 @@ git config --global alias.st status
 git config --global alias.unstage 'reset HEAD --'
 git config --global alias.last 'log -1 HEAD'
 ```
- 
+
 [1]: http://git-scm.com/book
 [2]: http://pcottle.github.io/learnGitBranching/
 [zsh-bug]: https://github.com/robbyrussell/oh-my-zsh/issues/521
@@ -199,11 +199,63 @@ Single commit repository data:
 
 **NOTE**:Git doesn’t store data as a series of changesets or deltas, but instead as a series of snapshots.
 
+## 3.2.3 Basic Merge Conflicts
 
+`git mergetool` to visually merge conflicts.
 
+## 3.3 Branch Management
 
+`git branch -v` to see the last commit on each branch.
 
+`git branch --merged` to see which branches are already merged into the branch you’re on
 
+* `git branch --no-merged`
 
+## 3.4.1 Long-Running Branches
 
+Keep branches at different levels of stability:
+![img](res/running-branches.png)
 
+## 3.5 Remote Branches
+
+Initial:
+
+![img](res/remote-branch1.png)
+
+After `git fetch origin`:
+
+![img](res/remote-branch2.png)
+
+## 3.5.1 Pushing
+
+`git push origin serverfix:awesomebranch`: **serverfix** is the local branch name and **awesomebranch** is the branch name on the remote project.
+
+## 3.5.2 Tracking Branches
+
+Tracking branches are local branches that have a directed relationship with a remote branch. 
+
+Checking out a local branch from a remote branch will automatically creates a tracking branch: `git checkout -b sf origin/serverfix`. Now the local branch **sf** will automatically push to or pull from **origin/serverfix**.
+
+If let the local branch use the same name as the remote branch, you can use `--track` option: ``git checkout --track origin/serverfix`.
+
+## 3.5.3 Deleting Remote Branches
+
+`git push origin :awesomebranch`
+
+> A way to remember this command is by recalling the `git push [remotename] [localbranch]:[remotebranch]` syntax that we went over a bit earlier. If you leave off the **[localbranch]** portion, then you’re basically saying, “Take nothing on my side and make it be **[remotebranch]**.”
+
+## 3.6.2 More Interesting Rebases
+
+Full git-rebase command:
+`git rebase [-i | --interactive] [options] [--onto <newbase>] [<upstream>] [<branch>]`
+
+**--onte** has the exact same effect as `git reset --hard <upstream>` (or \<newbase>).
+
+Check the example of `git rebase --onto master server client` in the book. It means:
+
+> Check out the client branch, figure out the patches from the common ancestor of the client and server branches, and then replay them onto master.
+
+## 3.6.3 The Perils of Rebasing
+
+> Don't rebase the commits that you have psuhed to a public repository.
+> Treat rebasing as a way to clean up and work with commits before you push them
