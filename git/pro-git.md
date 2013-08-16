@@ -1,6 +1,6 @@
 #[Pro Git][1]
 
-## 1.3 Git Basics(])
+## 1.3 Git Basics
 > The major difference between Git and any other VCS (Subversion and friends included) is the way Git thinks about its data.
 
 Most other systems store information as a list of file-based changes. Git thinks of its data more like **a set of snapshots** of a mini **filesystem**
@@ -29,7 +29,7 @@ Configure files:
 
 Check setttings: `git config --list`
 
-## 1.6 Git Help)
+## 1.6 Git Help
 
 * `git help <verb>`
 * `git <verb> --help`
@@ -61,20 +61,20 @@ Roughly: `git status`.
 
 Details: 
 
-* not staged changes: `git diff`
+* changes of not staged: `git diff`
 * staged changes: `git diff --cached` or `git diff --staged` for Git version >= 1.6.1
 
-## 2.2.7 Skipping the Staging Area)
+## 2.2.7 Skipping the Staging Area
 
 `git commit -a` will automatically stage every file that is tracked.
 
-## 2.2.8 Removing Files)
+## 2.2.8 Removing Files
 
 Delete file **permanently**: `git rm <FILE>`
 
 Stop tracking file: `git rm --cached <FILE>`, that is to remove it from the staging area.
 
-**NOTE**: `git rm` supports file-glob: `git rm log/\*.log`. The backslash(\) is needed because Git does its own filename expansion.
+**NOTE**: `git rm` supports file-glob: `git rm log/\*.log`. The backslash(\\) is needed because Git does its own filename expansion.
 
 ## 2.3 Viewing Commit History
 
@@ -96,13 +96,16 @@ Show commits with less or more infomation.
 
 ### `git log --pretty=format:"%h - %an, %ar : %s"`
 
-The full list of format options:
+The selected list of format options:
 
 | Option | Description of Output   |
 |:------ |:---------------------   || %H     | Commit hash             |
-| %h     | Abbreviated commit hash || %T     | Tree hash               || %t     | Abbreviated tree hash   || %P     | Parent hashes| %p     | Abbreviated parent hashes| %an    | Author name| %ae    | Author e-mail| %ad    | Author date (format respects the date= option) %ar Author date, relative| %cn    | Committer name| %ce    | Committer email| %c     | Committer date| %r     | Committer date, relative| %s     | Subject
-### `git log --graph`
-`--graph` option will show branch and merge history.
+| %h     | Abbreviated commit hash || %T     | Tree hash               || %t     | Abbreviated tree hash   || %P     | Parent hashes| %p     | Abbreviated parent hashes| %an    | Author name| %ae    | Author e-mail| %ad    | Author date (format respects the date= option) 
+| %ar    | Author date, relative| %cn    | Committer name| %ce    | Committer email| %cd    | Committer date| %rr    | Committer date, relative| %s     | Subject
+
+**NOTE**: For "%s" option, check the [bug of zsh][zsh-bug].### `git log --graph`
+`--graph` option will show branch and merge history.
+Check [A pretty format with color][git-log-format]
 
 ### 2.3.1 Limiting Log Output
 
@@ -162,7 +165,7 @@ There're 2 types of tags:
 
 #### Tagging past commit
 
-`git tag -a v1.4.1 9fceb02`
+`git tag v1.4.1 9fceb02`
 
 ### Sharing Tags
 
@@ -185,3 +188,5 @@ git config --global alias.last 'log -1 HEAD'
 
 [1]: http://git-scm.com/book
 [2]: http://pcottle.github.io/learnGitBranching/
+[zsh-bug]: https://github.com/robbyrussell/oh-my-zsh/issues/521
+[git-log-format]: http://www.jukie.net/bart/blog/pimping-out-git-log
