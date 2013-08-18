@@ -17,7 +17,7 @@ The three states:
 
 ![lifecycle](res/lifecycle.png)
 
-## 1.5 Git Config5
+## 1.5 Git Config
 
 Configure files:
 
@@ -249,7 +249,7 @@ If let the local branch use the same name as the remote branch, you can use `--t
 Full git-rebase command:
 `git rebase [-i | --interactive] [options] [--onto <newbase>] [<upstream>] [<branch>]`
 
-**--onte** has the exact same effect as `git reset --hard <upstream>` (or \<newbase>).
+**--onto** has the exact same effect as `git reset --hard <upstream>` (or \<newbase>).
 
 Check the example of `git rebase --onto master server client` in the book. It means:
 
@@ -257,5 +257,5 @@ Check the example of `git rebase --onto master server client` in the book. It me
 
 ## 3.6.3 The Perils of Rebasing
 
-> Don't rebase the commits that you have psuhed to a public repository.
+> Don't rebase the commits that you have pushed to a public repository.
 > Treat rebasing as a way to clean up and work with commits before you push them
