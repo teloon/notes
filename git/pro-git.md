@@ -259,3 +259,40 @@ Check the example of `git rebase --onto master server client` in the book. It me
 
 > Don't rebase the commits that you have pushed to a public repository.
 > Treat rebasing as a way to clean up and work with commits before you push them
+
+## 4 Git on the Server
+
+> A remote repository is generally a bare repository — a Git repository that has no working directory. Because the repository is only used as a collaboration point, there is no reason to have a snapshot checked out on disk; it’s just the Git data. In the simplest terms, a bare repository is the contents of your project’s .git directory and nothing else.
+
+## 4.1 The Protocals
+
+* Local Protocal
+* SSH Protocal
+	* the only network-based protocol that you can easily read from and write to.
+	* **main problem**: People must have access to your machine over SSH to access it(no anonymous access), even in a read-only capacity.
+* Git Protocal
+* HTTP/S Protocal
+
+## Getting Git on a Server
+
+Export an existing repository into a new bare repository — a repository that doesn’t contain a working directory:
+> `git clone --bare my_project my_project.git`
+
+This is roughly equivalent to:
+> `cp -Rf my_project/.git my_project.git`
+
+## 4.2.2 Github's SSH Access Setup
+
+Create a single ‘git’ user on the machine, ask every user who is to have write access to send you an SSH public key, and add that key to the /.ssh/authorized keys file of your new ‘git’ user. At that point, everyone will be able to access that machine via the ‘git’ user. 
+
+## 4.6 GitWeb
+
+Simple web-based visualization:
+
+> `git instaweb --httpd=webrick` for OSX or `git instaweb` for Linux
+> `git instaweb --httpd=webrick --stop` to stop
+
+## 4.7 Gitosis
+
+Access control for git.
+
