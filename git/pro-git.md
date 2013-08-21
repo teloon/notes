@@ -296,3 +296,26 @@ Simple web-based visualization:
 
 Access control for git.
 
+## 5.1.3 Dictator and Lieutenants Workflow
+
+It's generally used by huge projects like the Linux kernel.
+
+![img](res/dict-lieu-workflow.png)
+
+## 5.2 Commit Guidelines
+
+### Don't submit any whitespace errors
+
+Use `git diff --check` to check it before really commiting.
+
+### Make each commit logically separate changeset
+
+Try to make sure at least one commit per issue. If some of the changes modify the same file, use `git add --patch` to partially stage files.
+
+### Create quality commit message
+
+General rule:
+
+1. Start with a single line with no more than 50 chars to describe the commit;
+2. A blank line.
+3. A more detailed explanation: motivation for the change and contrast its implementation with previous behavior.
