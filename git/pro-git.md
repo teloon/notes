@@ -319,3 +319,15 @@ General rule:
 1. Start with a single line with no more than 50 chars to describe the commit;
 2. A blank line.
 3. A more detailed explanation: motivation for the change and contrast its implementation with previous behavior.
+
+## Some Usefull Command
+
+`git push -f origin featureA`: specify the `-f` to your push command in order to be able to replace the **featureA** branch on the server with a commit that isn’t a descendant of it.
+
+`git merge --no-commit --squash featureB`: `--squash` option takes all the work on the merged branch and squashes it into one non-merge commit on top of the branch you’re on. `--no-commit` option tells Git not to automatically record a commit. This allows you to introduce all the changes from another branch and then make more changes before recording the new commit. (check the example in 5.2.4)
+
+`git request-pull origin/master myfork`: The `request-pull` command takes the base branch into which you want your topic branch pulled and the Git repository URL you want them to pull from, and outputs a summary of all the changes you’re asking to be pulled in.
+
+`git format-patch -M origin/master`: You use `git format-patch` to generate the mbox-formatted files that you can e-mail to the list. The `format-patch` command prints out the names of the patch files it creates. The `-M` switch tells Git to look for renames.
+
+`git send-email *.patch`: First set up the imap section in **./.gitconfig** file. You can use `git send-email` to place the patch series in the folder of the specified IMAP server.
