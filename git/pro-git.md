@@ -409,3 +409,40 @@ $ ls *.tar.gzv1.6.2-rc1-20-g8c5b85c.tar.gz```or
 $ git shortlog --no-merges master --not v1.0.1
 Chris Wanstrath (8):      Add support for annotated tags to Grit::Tag      Add packed-refs annotated tag support.      Add Grit::Commit#to_patch      Update version and History.txt      Remove stray ‘puts‘      Make ls_tree ignore nilsTom Preston-Werner (4):      fix dates in history      dynamic version method      Version bump to 1.0.2      Regenerated gemspec for version 1.0.2
 ```
+
+## 6.1.2 Short SHA
+
+If you pass `--abbrev-commit` to the git log command, the output will use shorter values but keep them unique.
+
+## 6.1.4 Branch References
+
+See which specific SHA a branch points to: `git rev-parse topic1`.
+
+## 6.1.5 RefLog Shortnames
+
+**RefLog** — a log of where your HEAD and branch references have been for the last few months.
+
+See RefLog: `git reflog`. Check some specific log: `git show HEAD{@5}`.
+
+Time restrict: `git show master@{yesterday}`.
+
+See reflog formatted like the `git log` output:
+
+```
+$ git log -g mastercommit 734713bc047d87bf7eac9674765ae793478c50d3Reflog: master@{0} (Scott Chacon <schacon@gmail.com>)Reflog message: commit: fixed refs handling, added gc auto, updatedAuthor: Scott Chacon <schacon@gmail.com>Date:   Fri Jan 2 18:32:33 2009 -0800    fixed refs handling, added gc auto, updated tests
+commit d921970aadf03b3cf0e71becdaab3147ba71cdefReflog: master@{1} (Scott Chacon <schacon@gmail.com>)Reflog message: merge phedders/rdocs: Merge made by recursive.Author: Scott Chacon <schacon@gmail.com>Date:   Thu Dec 11 15:08:43 2008 -0800    Merge commit ’phedders/rdocs’
+```## 6.1.7 Commit Ranges
+### Double Dot
+`master..experiment`: all commits reachable by experiment that aren’t reachable by master.
+### Multiple Points
+These three commands are equivalent:
+```$ git log refA..refB$ git log ˆrefA refB$ git log refB --not refA```
+
+This is nice because with this syntax you can specify more than two references in your query, which you cannot do with the double-dot syntax. For insance, if you want to see all commits that are reachable from refA or refB but not from refC, you can type one of these:
+
+```$ git log refA refB ˆrefC$ git log refA refB --not refC```### Triple DotSpecifies all the commits that are reachable by either of two references but not by both of them:
+```$ git log master...experimentFEDC```
+A common switch to use with the log command in this case is --left-right, which shows you which side of the range each commit is in. This helps make the data more useful:
+```
+$ git log --left-right master...experiment <F<E>D>C
+```
