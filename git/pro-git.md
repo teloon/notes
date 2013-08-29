@@ -446,4 +446,78 @@ This is nice because with this syntax you can specify more than two references i
 ```
 $ git log --left-right master...experiment
 <F<E>D>C
-```
+```## 6.3 Stashing
+> Stashing takes the dirty state of your working directory — that is, your modified tracked files and staged changes — and saves it on a stack of unfinished changes that you can reapply at any time.When the working directory is dirty, you can't switch branches.### Commands
+`git stash`: stash the current working dir.
+`git stash list`: list all the stashes done previously.
+`git stash apply [STASH-ID]`: reapply the stash to the current working dir, if `[STASH-ID]` is ommited, the latest stash will be applied.**NOTE**: Having a clean working directory and applying it on the same branch **aren’t** necessary to successfully apply a stash.`git stash apply --index`: For `git satsh apply`, the changes to your files were reapplied, but the file you staged before wasn’t restaged. To do that, you must run the git stash apply command with a --index option to tell the command to try to reapply the staged changes.
+`git stash drop`: `git stash apply` only apply stash, but don't remove it. This command will do it.
+`git stash pop`: apply and drop.## 6.3.2 Creating a Branch from a StashIt's helpful when conflicts happen to `git stash apply`.`git stash branch BRANCH-NAME`: Creates a new branch for you, checks out the commit you were on when you stashed your work, reapplies your work there, and then drops the stash if it applies successfully## 6.4.2 Changing Multiple Commit Messages
+`git rebase -i HEAD ̃3`: **Note** that these commits are listed in the **opposite** order than you normally see them using the log command.(When rebasing, apply the commits top to bottom)## 6.4.5 Splitting a Commit
+In `git rebase -i HEAD~3`, change the instruction on the commit to **edit**.
+```pick f7f3f6d changed my name a bitedit 310154e updated README formatting and added blamepick a5f4a0d added cat-file
+```
+
+When you save and exit the editor, Git rewinds to the parent of the first commit in your list, applies the first commit (f7f3f6d), applies the second (310154e), and drops you to the console. 
+
+```
+$ git reset HEADˆ$ git add README$ git commit -m ’updated README formatting’$ git add lib/simplegit.rb$ git commit -m ’added blame’$ git rebase --continue
+```
+
+## 6.4.6 The Nuclear Option: filter-branch
+
+Rewrite a larger number of commits in some scriptable way — for instance, changing your e-mail ad- dress globally or removing a file from every commit. 
+
+**NOTE**: you probably shouldn’t use it unless your project isn’t yet public and other people haven’t based work off the commits you’re about to rewrite.
+
+### Removing a File from Every Commit
+
+`git filter-branch --tree-filter ’rm -f passwords.txt’ HEAD`: The `--tree-filter` option runs the specified command after each checkout of the project and then recommits the results.
+
+It’s generally a good idea to do this in a testing branch and then hard-reset your master branch after you’ve determined the outcome is what you really want.
+
+To run `filter-branch` on all your branches, you can pass `--all` to the command.
+
+### Making a Subdirectory the New Root
+
+If you want to make the trunk subdirectory be the new project root for every commit: `git filter-branch --subdirectory-filter trunk HEAD`.
+
+### Changing E-Mail Addresses Globally
+
+Use `--commit-filter` to go through and rewrite every commit.
+
+```
+$ git filter-branch --commit-filter ’        if [ "$GIT_AUTHOR_EMAIL" = "schacon@localhost" ];        then                GIT_AUTHOR_NAME="Scott Chacon";                GIT_AUTHOR_EMAIL="schacon@example.com";                git commit-tree "$@";        else                git commit-tree "$@";fi’ HEAD```
+
+## 6.5 Debugging with Git
+
+## 6.5.1 File Annotation
+
+If you track down a bug in your code and want to know when it was introduced and why, file annotation is often your best tool. It shows you what commit was the last to modify each line of any file.
+
+you can annotate the file with `git blame` to see when each line of the method was last edited and by whom.
+
+`git blame -L 12,22 simplegit.rb`: `-L` option to limit the output to lines 12 through 22For `git blame` output, the commit SHA-1 starting with **^** means this line is in this file's original commit. If you pass `-C` to git blame, Git analyzes the file you’re annotating and tries to figure out where **snippets of code within it originally came from** if they were copied from elsewhere.## 6.5.2 Binary SearchThe bisect command does a binary search through your commit history to help you identify as quickly as possible which commit introduced an issue.
+
+start:
+```
+$ git bisect start$ git bisect bad$ git bisect good v1.0
+```
+
+repeat:
+
+```
+$ git bisect good
+or $ git bisect bad
+```
+until finding the first bad commit.
+
+**NOTE**: When you’re finished, you should run `git bisect reset` to reset your HEAD to where you were before you started.
+
+Automate this process:
+
+```
+$ git bisect start HEAD v1.0$ git bisect run test-error.sh
+```
+
+`test-error.sh` is a script that test the project and exit 0 if the project is good or non–0 if the project is bad.
