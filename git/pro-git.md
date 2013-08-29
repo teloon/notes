@@ -422,7 +422,7 @@ See which specific SHA a branch points to: `git rev-parse topic1`.
 
 **RefLog** — a log of where your HEAD and branch references have been for the last few months.
 
-See RefLog: `git reflog`. Check some specific log: `git show HEAD{@5}`.
+See RefLog: `git reflog`. Check some specific log: `git show HEAD@{5}`.
 
 Time restrict: `git show master@{yesterday}`.
 
@@ -433,7 +433,7 @@ $ git log -g mastercommit 734713bc047d87bf7eac9674765ae793478c50d3Reflog: mast
 commit d921970aadf03b3cf0e71becdaab3147ba71cdefReflog: master@{1} (Scott Chacon <schacon@gmail.com>)Reflog message: merge phedders/rdocs: Merge made by recursive.Author: Scott Chacon <schacon@gmail.com>Date:   Thu Dec 11 15:08:43 2008 -0800    Merge commit ’phedders/rdocs’
 ```## 6.1.7 Commit Ranges
 ### Double Dot
-`master..experiment`: all commits reachable by experiment that aren’t reachable by master.
+`master..experiment`: all commits reachable by **experiment** that aren’t reachable by **master**.
 ### Multiple Points
 These three commands are equivalent:
 ```$ git log refA..refB$ git log ˆrefA refB$ git log refB --not refA```
@@ -444,5 +444,6 @@ This is nice because with this syntax you can specify more than two references i
 ```$ git log master...experimentFEDC```
 A common switch to use with the log command in this case is --left-right, which shows you which side of the range each commit is in. This helps make the data more useful:
 ```
-$ git log --left-right master...experiment <F<E>D>C
+$ git log --left-right master...experiment
+<F<E>D>C
 ```
