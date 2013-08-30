@@ -452,7 +452,7 @@ $ git log --left-right master...experiment
 `git stash list`: list all the stashes done previously.
 `git stash apply [STASH-ID]`: reapply the stash to the current working dir, if `[STASH-ID]` is ommited, the latest stash will be applied.**NOTE**: Having a clean working directory and applying it on the same branch **aren’t** necessary to successfully apply a stash.`git stash apply --index`: For `git satsh apply`, the changes to your files were reapplied, but the file you staged before wasn’t restaged. To do that, you must run the git stash apply command with a --index option to tell the command to try to reapply the staged changes.
 `git stash drop`: `git stash apply` only apply stash, but don't remove it. This command will do it.
-`git stash pop`: apply and drop.## 6.3.2 Creating a Branch from a StashIt's helpful when conflicts happen to `git stash apply`.`git stash branch BRANCH-NAME`: Creates a new branch for you, checks out the commit you were on when you stashed your work, reapplies your work there, and then drops the stash if it applies successfully## 6.4.2 Changing Multiple Commit Messages
+`git stash pop`: apply and drop.## 6.3.2 Creating a Branch from a StashIt's helpful when conflicts happen to `git stash apply`.`git stash branch BRANCH-NAME [STASH-ID]`: Creates a new branch for you, checks out the commit you were on when you stashed your work, reapplies your work there, and then drops the stash if it applies successfully## 6.4.2 Changing Multiple Commit Messages
 `git rebase -i HEAD ̃3`: **Note** that these commits are listed in the **opposite** order than you normally see them using the log command.(When rebasing, apply the commits top to bottom)## 6.4.5 Splitting a Commit
 In `git rebase -i HEAD~3`, change the instruction on the commit to **edit**.
 ```pick f7f3f6d changed my name a bitedit 310154e updated README formatting and added blamepick a5f4a0d added cat-file
@@ -521,3 +521,84 @@ $ git bisect start HEAD v1.0$ git bisect run test-error.sh
 ```
 
 `test-error.sh` is a script that test the project and exit 0 if the project is good or non–0 if the project is bad.
+
+## 6.6 Submodules
+
+Scenarios: you want to be able to treat the two projects as separate yet still be able to use one from within the other.
+
+## 6.6.1 Create Submodules
+
+`git submodule add git://github.com/chneukirchen/rack.git rack`: add external project **rack** as submodules.
+
+Git doesn’t track submodule's contents when you’re not in that directory. Instead, Git records it as a particular commit from that repository. 
+
+When commit the project, you'll see 160000 mode for the submodule entry.
+
+## 6.6.2 Cloning a Project with Submodules
+
+`git clone git://github.com/schacon/myproject.git`: but the submodule directory will be empty.
+
+To get the submodule:
+
+1. `git submodule init` to initialize;
+2. `git submodule update` to fetch all the data from the project and **check out appropriate commit listed in your superproject**.
+
+Now the submodule subdirectory is at the exact state it was in when you committed earlier. 
+
+### Merge with other's work
+
+Two steps:
+
+1. Update the point the submodule commit in superproject;
+2. update the content of the submodule to the version the superproject points to;
+
+For 1, by `git merge origin/master`, it only merges a change to the pointer for your submodule; but it doesn’t update the code in the submodule directory.
+
+For 2, by `git submodule update`, it'll update the content of the submodule to the correct version.
+
+**One common problem** happens when a developer makes a change locally in a sub- module but doesn’t push it to a public server. Then, they commit a pointer to that non-public state and push up the superproject. When other developers try to run git submodule update, the submodule system can’t find the commit that is referenced, be- cause it exists only on the first developer’s system. If that happens, you see an error like this:
+
+## 6.6.4 Issues with Submodules
+
+* The submodule is detached. The second `git submodule update` will overwrite the previous changes, which has no branch pointing to and won't be found.
+	* Create a branch when you work in a submodule directory.
+* Switching branches with submodules in them can also be tricky. If you create a new branch, add a submodule there, and then switch back to a branch without that submodule, you still have the submodule directory as an untracked directory.
+	* You have to either move it out of the way or remove it, in which case you have to clone it again when you switch back—and you may lose local changes or branches that you didn’t push up.
+* switching from subdirectories to submodules.
+	* first, unstage the submodule directory
+	* then, add the submodule by `git submodule add …`
+	* If you want to switch to another branch where those files are still in the actual tree rather than a submodule, you need to move the rack submodule directory out of the way by `mv SUBMODULE-DIR /tmp/`. When you switch back, you can either run `git submodule update` to reclone, or you can move your /tmp/SUBMODULE-DIR  directory back into the empty directory.
+	
+## 6.7 Subtree Merging
+
+Merging strategy:
+
+1. recursive strategy
+2. octopus strategy
+3. subtree merge
+
+The idea of the subtree merge is that you have two projects, and one of the projects maps to a subdirectory of the other one and vice versa.
+
+Suppose **Rack** is the submodule project.
+
+You want to pull the Rack project into your master project as a subdirectory: `git read-tree --prefix=rack/ -u rack_branch`
+
+### Merge changes from Rack
+
+```
+$ git checkout rack_branch$ git pull
+$ git checkout master$ git merge --squash -s subtree --no-commit rack_branch```
+### diff between current **rack** subdirectory and the `rack_branch` branch
+```
+$ git diff-tree -p rack_branch
+```
+
+### diff between current **rack** subdirectory and the master branch on the server ```
+$ git diff-tree -p rack_remote/master
+```
+
+
+
+
+
+
