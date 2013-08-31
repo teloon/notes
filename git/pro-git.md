@@ -27,7 +27,7 @@ Configure files:
 	* git config --global
 * .git/config
 
-Check setttings: `git config --list`
+Check settings: `git config --list`
 
 ## 1.6 Git Help
 
@@ -39,7 +39,7 @@ Check setttings: `git config --list`
 
 `git add <FILE>`, BANG!
 
-**Note**:the status of a file can be both staged and unstaged. If it is commited now, the version of the file is the version of the staged file, not the one currently working on.
+**Note**:the status of a file can be both staged and unstaged. If it is committed now, the version of the file is the version of the staged file, not the one currently working on.
 
 Git can also stage certain parts of a file, that is **stage patch**. Check interactive staging: `git add -i`.
 
@@ -84,7 +84,7 @@ Useful `git log` **options**:
 
 `-p`: show diff in each commit.
 
-`-2`: limmit the output to the latest 2 commits.
+`-2`: limit the output to the latest 2 commits.
 
 ### `git log --stat`
 
@@ -92,7 +92,7 @@ Show abbreviated status for each commit.
 
 ### `git log --pretty[=oneline|short|full|fuller]`
 
-Show commits with less or more infomation.
+Show commits with less or more information.
 
 ### `git log --pretty=format:"%h - %an, %ar : %s"`
 
@@ -187,7 +187,7 @@ There're 2 types of tags:
 
 ### Sharing Tags
 
-By default, git doesn't tranfer tags to remote servers. Explicitly push tags to a shared server: `git push orign v1.4.1`.
+By default, git doesn't transfer tags to remote servers. Explicitly push tags to a shared server: `git push origin v1.4.1`.
 
 Or push all the tags at once: `git push origin --tags`.
 
@@ -282,14 +282,14 @@ Check the example of `git rebase --onto master server client` in the book. It me
 
 > A remote repository is generally a bare repository — a Git repository that has no working directory. Because the repository is only used as a collaboration point, there is no reason to have a snapshot checked out on disk; it’s just the Git data. In the simplest terms, a bare repository is the contents of your project’s .git directory and nothing else.
 
-## 4.1 The Protocals
+## 4.1 The Protocols
 
-* Local Protocal
-* SSH Protocal
+* Local Protocol
+* SSH Protocol
 	* the only network-based protocol that you can easily read from and write to.
 	* **main problem**: People must have access to your machine over SSH to access it(no anonymous access), even in a read-only capacity.
-* Git Protocal
-* HTTP/S Protocal
+* Git Protocol
+* HTTP/S Protocol
 
 ## Getting Git on a Server
 
@@ -324,7 +324,7 @@ It's generally used by huge projects like the Linux kernel.
 
 ### Don't submit any whitespace errors
 
-Use `git diff --check` to check it before really commiting.
+Use `git diff --check` to check it before really committing.
 
 ### Make each commit logically separate changeset
 
@@ -338,7 +338,7 @@ General rule:
 2. A blank line.
 3. A more detailed explanation: motivation for the change and contrast its implementation with previous behavior.
 
-## Some Usefull Command
+## Some Useful Command
 
 `git push -f origin featureA`: specify the `-f` to your push command in order to be able to replace the **featureA** branch on the server with a commit that isn’t a descendant of it.
 
@@ -415,7 +415,7 @@ How to distribute the public PGP key used to sign your tags:
 1. Export the GPG key
 2. `git hash-object` to write a new blob with the content of the key
 3. tag the key in the repo
-4. share the GPG key via the blob in the repo, just pulling the blob out and inport it into GPG
+4. share the GPG key via the blob in the repo, just pulling the blob out and import it into GPG
 
 ## 5.3.7 Generating a Build Number
 
@@ -512,7 +512,7 @@ $ git log ˆrefA refB
 $ git log refB --not refA
 ```
 
-This is nice because with this syntax you can specify more than two references in your query, which you cannot do with the double-dot syntax. For insance, if you want to see all commits that are reachable from refA or refB but not from refC, you can type one of these:
+This is nice because with this syntax you can specify more than two references in your query, which you cannot do with the double-dot syntax. For instance, if you want to see all commits that are reachable from refA or refB but not from refC, you can type one of these:
 
 ```
 $ git log refA refB ˆrefC
@@ -552,11 +552,11 @@ When the working directory is dirty, you can't switch branches.
 
 `git stash list`: list all the stashes done previously.
 
-`git stash apply [STASH-ID]`: reapply the stash to the current working dir, if `[STASH-ID]` is ommited, the latest stash will be applied.
+`git stash apply [STASH-ID]`: reapply the stash to the current working dir, if `[STASH-ID]` is omitted, the latest stash will be applied.
 
 **NOTE**: Having a clean working directory and applying it on the same branch **aren’t** necessary to successfully apply a stash.
 
-`git stash apply --index`: For `git satsh apply`, the changes to your files were reapplied, but the file you staged before wasn’t restaged. To do that, you must run the git stash apply command with a --index option to tell the command to try to reapply the staged changes.
+`git stash apply --index`: For `git stash apply`, the changes to your files were reapplied, but the file you staged before wasn’t restaged. To do that, you must run the git stash apply command with a --index option to tell the command to try to reapply the staged changes.
 
 `git stash drop`: `git stash apply` only apply stash, but don't remove it. This command will do it.
 
@@ -754,6 +754,8 @@ $ git diff-tree -p rack_branch
 ```
 $ git diff-tree -p rack_remote/master
 ```
+
+
 
 
 
