@@ -755,9 +755,41 @@ $ git diff-tree -p rack_branch
 $ git diff-tree -p rack_remote/master
 ```
 
+## 7.1.1~4 Client Configuration
 
+All the options your version of Git recognizes: `git config --help`.
 
+### Some Selected Config
 
+* `core.editor`
+* `commit.template`
+* `core.pager`
+* `user.signingkey`
+* `core.excludesfile`
+* `help.autocorrect`
+    * Only available in Git 1.6.1
+* Colors
+    * `color.ui true|false|always`
+    * `color.*`
+        * Specific coloring settings
+* Merge and Diff Tools
+    * `git config --global merge.tool kdiff3`
+    * check 7.1.3 to Setup External Merge and Diff Tools
+* Formatting and Whitespace
+    * `core.autocrlf false|true|input`
+* Whitespace
+    * `core.whitespace …`
+        * `trailing-space` and `space-before-tab` turned on by default
+        * `indent-with-non-tab` and `cr-at-eol` turned off by default
+    * Fix whitespace problem when applying patches or rebasing with `--whitespace=fix` option. Or just warn you with `--whitespace=warn`.
+
+## 7.1.5 Server Configuration
+
+### Some Selected Config
+
+* `receive.fsckObjects true|false`
+* `receive.denyNonFastForwards true|false`
+* `receive.denyDeletes true|false`
 
 
 
