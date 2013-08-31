@@ -99,13 +99,31 @@ Show commits with less or more infomation.
 The selected list of format options:
 
 | Option | Description of Output   |
-|:------ |:---------------------   || %H     | Commit hash             |
-| %h     | Abbreviated commit hash || %T     | Tree hash               || %t     | Abbreviated tree hash   || %P     | Parent hashes| %p     | Abbreviated parent hashes| %an    | Author name| %ae    | Author e-mail| %ad    | Author date (format respects the date= option) 
-| %ar    | Author date, relative| %cn    | Committer name| %ce    | Committer email| %cd    | Committer date| %rr    | Committer date, relative| %s     | Subject
+|:------ |:---------------------   |
+| %H     | Commit hash             |
+| %h     | Abbreviated commit hash |
+| %T     | Tree hash               |
+| %t     | Abbreviated tree hash   |
+| %P     | Parent hashes
+| %p     | Abbreviated parent hashes
+| %an    | Author name
+| %ae    | Author e-mail
+| %ad    | Author date (format respects the date= option) 
+| %ar    | Author date, relative
+| %cn    | Committer name
+| %ce    | Committer email
+| %cd    | Committer date
+| %rr    | Committer date, relative
+| %s     | Subject
 
-**NOTE**: For "%s" option, check the [bug of zsh][zsh-bug].### `git log --graph`
-`--graph` option will show branch and merge history.
-Check [A pretty format with color][git-log-format]
+**NOTE**: For "%s" option, check the [bug of zsh][zsh-bug].
+
+### `git log --graph`
+
+`--graph` option will show branch and merge history.
+
+
+Check [A pretty format with color][git-log-format]
 
 ### 2.3.1 Limiting Log Output
 
@@ -363,7 +381,10 @@ If you’re applying a number of patches from an mbox, you can also run the am c
 Jessica says she has a great new feature in the **ruby-client** of her repository:
 
 ```
-$ git remote add jessica git://github.com/jessica/myproject.git$ git fetch jessica$ git checkout -b rubyclient jessica/ruby-client```
+$ git remote add jessica git://github.com/jessica/myproject.git
+$ git fetch jessica
+$ git checkout -b rubyclient jessica/ruby-client
+```
 
 If you only need the one-time pull and don't need to remember the remote repository, the `git pull` is also ok: `git pull git://github.com/onetimeguy/project.git`
 
@@ -399,15 +420,44 @@ How to distribute the public PGP key used to sign your tags:
 ## 5.3.7 Generating a Build Number
 
 ```
-$ git describe masterv1.6.2-rc1-20-g8c5b85c```
-{nearest_tag}-{number_of_commits}-{partial_SHA1_value}
-## 5.3.8 Preparing a Release
-```$ git archive master --prefix='project/' | gzip > `git describe master`.tar.gz
-$ ls *.tar.gzv1.6.2-rc1-20-g8c5b85c.tar.gz```or
-```$ git archive master --prefix='project/' --format=zip > `git describe master`.zip```## 5.3.9 The Shortlogthe following gives you a summary of all the commits since your last release, if your last release was named v1.0.1:
-```
+$ git describe master
+v1.6.2-rc1-20-g8c5b85c
+```
+
+{nearest_tag}-{number_of_commits}-{partial_SHA1_value}
+
+## 5.3.8 Preparing a Release
+
+
+```
+$ git archive master --prefix='project/' | gzip > `git describe master`.tar.gz
+$ ls *.tar.gz
+v1.6.2-rc1-20-g8c5b85c.tar.gz
+```
+or
+
+```
+$ git archive master --prefix='project/' --format=zip > `git describe master`.zip
+```
+
+## 5.3.9 The Shortlog
+
+the following gives you a summary of all the commits since your last release, if your last release was named v1.0.1:
+
+```
 $ git shortlog --no-merges master --not v1.0.1
-Chris Wanstrath (8):      Add support for annotated tags to Grit::Tag      Add packed-refs annotated tag support.      Add Grit::Commit#to_patch      Update version and History.txt      Remove stray ‘puts‘      Make ls_tree ignore nilsTom Preston-Werner (4):      fix dates in history      dynamic version method      Version bump to 1.0.2      Regenerated gemspec for version 1.0.2
+Chris Wanstrath (8):
+      Add support for annotated tags to Grit::Tag
+      Add packed-refs annotated tag support.
+      Add Grit::Commit#to_patch
+      Update version and History.txt
+      Remove stray ‘puts‘
+      Make ls_tree ignore nils
+Tom Preston-Werner (4):
+      fix dates in history
+      dynamic version method
+      Version bump to 1.0.2
+      Regenerated gemspec for version 1.0.2
 ```
 
 ## 6.1.2 Short SHA
@@ -429,39 +479,118 @@ Time restrict: `git show master@{yesterday}`.
 See reflog formatted like the `git log` output:
 
 ```
-$ git log -g mastercommit 734713bc047d87bf7eac9674765ae793478c50d3Reflog: master@{0} (Scott Chacon <schacon@gmail.com>)Reflog message: commit: fixed refs handling, added gc auto, updatedAuthor: Scott Chacon <schacon@gmail.com>Date:   Fri Jan 2 18:32:33 2009 -0800    fixed refs handling, added gc auto, updated tests
-commit d921970aadf03b3cf0e71becdaab3147ba71cdefReflog: master@{1} (Scott Chacon <schacon@gmail.com>)Reflog message: merge phedders/rdocs: Merge made by recursive.Author: Scott Chacon <schacon@gmail.com>Date:   Thu Dec 11 15:08:43 2008 -0800    Merge commit ’phedders/rdocs’
-```## 6.1.7 Commit Ranges
-### Double Dot
-`master..experiment`: all commits reachable by **experiment** that aren’t reachable by **master**.
-### Multiple Points
-These three commands are equivalent:
-```$ git log refA..refB$ git log ˆrefA refB$ git log refB --not refA```
+$ git log -g master
+commit 734713bc047d87bf7eac9674765ae793478c50d3
+Reflog: master@{0} (Scott Chacon <schacon@gmail.com>)
+Reflog message: commit: fixed refs handling, added gc auto, updated
+Author: Scott Chacon <schacon@gmail.com>
+Date:   Fri Jan 2 18:32:33 2009 -0800
+    fixed refs handling, added gc auto, updated tests
+
+commit d921970aadf03b3cf0e71becdaab3147ba71cdef
+Reflog: master@{1} (Scott Chacon <schacon@gmail.com>)
+Reflog message: merge phedders/rdocs: Merge made by recursive.
+Author: Scott Chacon <schacon@gmail.com>
+Date:   Thu Dec 11 15:08:43 2008 -0800
+    Merge commit ’phedders/rdocs’
+```
+
+## 6.1.7 Commit Ranges
+
+
+### Double Dot
+
+`master..experiment`: all commits reachable by **experiment** that aren’t reachable by **master**.
+
+### Multiple Points
+
+These three commands are equivalent:
+
+```
+$ git log refA..refB
+$ git log ˆrefA refB
+$ git log refB --not refA
+```
 
 This is nice because with this syntax you can specify more than two references in your query, which you cannot do with the double-dot syntax. For insance, if you want to see all commits that are reachable from refA or refB but not from refC, you can type one of these:
 
-```$ git log refA refB ˆrefC$ git log refA refB --not refC```### Triple DotSpecifies all the commits that are reachable by either of two references but not by both of them:
-```$ git log master...experimentFEDC```
-A common switch to use with the log command in this case is --left-right, which shows you which side of the range each commit is in. This helps make the data more useful:
-```
+```
+$ git log refA refB ˆrefC
+$ git log refA refB --not refC
+```
+
+### Triple Dot
+
+Specifies all the commits that are reachable by either of two references but not by both of them:
+
+```
+$ git log master...experiment
+F
+E
+D
+C
+```
+
+A common switch to use with the log command in this case is --left-right, which shows you which side of the range each commit is in. This helps make the data more useful:
+
+```
 $ git log --left-right master...experiment
-<F<E>D>C
-```## 6.3 Stashing
-> Stashing takes the dirty state of your working directory — that is, your modified tracked files and staged changes — and saves it on a stack of unfinished changes that you can reapply at any time.When the working directory is dirty, you can't switch branches.### Commands
-`git stash`: stash the current working dir.
-`git stash list`: list all the stashes done previously.
-`git stash apply [STASH-ID]`: reapply the stash to the current working dir, if `[STASH-ID]` is ommited, the latest stash will be applied.**NOTE**: Having a clean working directory and applying it on the same branch **aren’t** necessary to successfully apply a stash.`git stash apply --index`: For `git satsh apply`, the changes to your files were reapplied, but the file you staged before wasn’t restaged. To do that, you must run the git stash apply command with a --index option to tell the command to try to reapply the staged changes.
-`git stash drop`: `git stash apply` only apply stash, but don't remove it. This command will do it.
-`git stash pop`: apply and drop.## 6.3.2 Creating a Branch from a StashIt's helpful when conflicts happen to `git stash apply`.`git stash branch BRANCH-NAME [STASH-ID]`: Creates a new branch for you, checks out the commit you were on when you stashed your work, reapplies your work there, and then drops the stash if it applies successfully## 6.4.2 Changing Multiple Commit Messages
-`git rebase -i HEAD ̃3`: **Note** that these commits are listed in the **opposite** order than you normally see them using the log command.(When rebasing, apply the commits top to bottom)## 6.4.5 Splitting a Commit
-In `git rebase -i HEAD~3`, change the instruction on the commit to **edit**.
-```pick f7f3f6d changed my name a bitedit 310154e updated README formatting and added blamepick a5f4a0d added cat-file
+<F
+<E
+>D
+>C
+```
+## 6.3 Stashing
+
+> Stashing takes the dirty state of your working directory — that is, your modified tracked files and staged changes — and saves it on a stack of unfinished changes that you can reapply at any time.
+
+When the working directory is dirty, you can't switch branches.
+
+### Commands
+
+`git stash`: stash the current working dir.
+
+`git stash list`: list all the stashes done previously.
+
+`git stash apply [STASH-ID]`: reapply the stash to the current working dir, if `[STASH-ID]` is ommited, the latest stash will be applied.
+
+**NOTE**: Having a clean working directory and applying it on the same branch **aren’t** necessary to successfully apply a stash.
+
+`git stash apply --index`: For `git satsh apply`, the changes to your files were reapplied, but the file you staged before wasn’t restaged. To do that, you must run the git stash apply command with a --index option to tell the command to try to reapply the staged changes.
+
+`git stash drop`: `git stash apply` only apply stash, but don't remove it. This command will do it.
+
+`git stash pop`: apply and drop.
+
+## 6.3.2 Creating a Branch from a Stash
+
+It's helpful when conflicts happen to `git stash apply`.
+
+`git stash branch BRANCH-NAME [STASH-ID]`: Creates a new branch for you, checks out the commit you were on when you stashed your work, reapplies your work there, and then drops the stash if it applies successfully
+
+## 6.4.2 Changing Multiple Commit Messages
+
+`git rebase -i HEAD ̃3`: **Note** that these commits are listed in the **opposite** order than you normally see them using the log command.(When rebasing, apply the commits top to bottom)
+
+## 6.4.5 Splitting a Commit
+
+In `git rebase -i HEAD~3`, change the instruction on the commit to **edit**.
+
+```
+pick f7f3f6d changed my name a bit
+edit 310154e updated README formatting and added blame
+pick a5f4a0d added cat-file
 ```
 
 When you save and exit the editor, Git rewinds to the parent of the first commit in your list, applies the first commit (f7f3f6d), applies the second (310154e), and drops you to the console. 
 
 ```
-$ git reset HEADˆ$ git add README$ git commit -m ’updated README formatting’$ git add lib/simplegit.rb$ git commit -m ’added blame’$ git rebase --continue
+$ git reset HEADˆ
+$ git add README
+$ git commit -m ’updated README formatting’
+$ git add lib/simplegit.rb
+$ git commit -m ’added blame’
+$ git rebase --continue
 ```
 
 ## 6.4.6 The Nuclear Option: filter-branch
@@ -487,7 +616,16 @@ If you want to make the trunk subdirectory be the new project root for every com
 Use `--commit-filter` to go through and rewrite every commit.
 
 ```
-$ git filter-branch --commit-filter ’        if [ "$GIT_AUTHOR_EMAIL" = "schacon@localhost" ];        then                GIT_AUTHOR_NAME="Scott Chacon";                GIT_AUTHOR_EMAIL="schacon@example.com";                git commit-tree "$@";        else                git commit-tree "$@";fi’ HEAD```
+$ git filter-branch --commit-filter ’
+        if [ "$GIT_AUTHOR_EMAIL" = "schacon@localhost" ];
+        then
+                GIT_AUTHOR_NAME="Scott Chacon";
+                GIT_AUTHOR_EMAIL="schacon@example.com";
+                git commit-tree "$@";
+        else
+                git commit-tree "$@";
+fi’ HEAD
+```
 
 ## 6.5 Debugging with Git
 
@@ -497,11 +635,22 @@ If you track down a bug in your code and want to know when it was introduced and
 
 you can annotate the file with `git blame` to see when each line of the method was last edited and by whom.
 
-`git blame -L 12,22 simplegit.rb`: `-L` option to limit the output to lines 12 through 22For `git blame` output, the commit SHA-1 starting with **^** means this line is in this file's original commit. If you pass `-C` to git blame, Git analyzes the file you’re annotating and tries to figure out where **snippets of code within it originally came from** if they were copied from elsewhere.## 6.5.2 Binary SearchThe bisect command does a binary search through your commit history to help you identify as quickly as possible which commit introduced an issue.
+`git blame -L 12,22 simplegit.rb`: `-L` option to limit the output to lines 12 through 22
+
+For `git blame` output, the commit SHA-1 starting with **^** means this line is in this file's original commit. 
+
+If you pass `-C` to git blame, Git analyzes the file you’re annotating and tries to figure out where **snippets of code within it originally came from** if they were copied from elsewhere.
+
+## 6.5.2 Binary Search
+
+The bisect command does a binary search through your commit history to help you identify as quickly as possible which commit introduced an issue.
 
 start:
-```
-$ git bisect start$ git bisect bad$ git bisect good v1.0
+
+```
+$ git bisect start
+$ git bisect bad
+$ git bisect good v1.0
 ```
 
 repeat:
@@ -517,7 +666,8 @@ until finding the first bad commit.
 Automate this process:
 
 ```
-$ git bisect start HEAD v1.0$ git bisect run test-error.sh
+$ git bisect start HEAD v1.0
+$ git bisect run test-error.sh
 ```
 
 `test-error.sh` is a script that test the project and exit 0 if the project is good or non–0 if the project is bad.
@@ -586,16 +736,25 @@ You want to pull the Rack project into your master project as a subdirectory: `g
 ### Merge changes from Rack
 
 ```
-$ git checkout rack_branch$ git pull
-$ git checkout master$ git merge --squash -s subtree --no-commit rack_branch```
-### diff between current **rack** subdirectory and the `rack_branch` branch
-```
+$ git checkout rack_branch
+$ git pull
+$ git checkout master
+$ git merge --squash -s subtree --no-commit rack_branch
+```
+
+
+### diff between current **rack** subdirectory and the `rack_branch` branch
+
+```
 $ git diff-tree -p rack_branch
 ```
 
-### diff between current **rack** subdirectory and the master branch on the server ```
+### diff between current **rack** subdirectory and the master branch on the server 
+
+```
 $ git diff-tree -p rack_remote/master
 ```
+
 
 
 
