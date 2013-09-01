@@ -777,6 +777,7 @@ All the options your version of Git recognizes: `git config --help`.
     * check 7.1.3 to Setup External Merge and Diff Tools
 * Formatting and Whitespace
     * `core.autocrlf false|true|input`
+    * Explanation: [mind the end of your line](http://timclem.wordpress.com/2012/03/01/mind-the-end-of-your-line/) and [best strategy handling crlf](http://stackoverflow.com/questions/170961/whats-the-best-crlf-handling-strategy-with-git)
 * Whitespace
     * `core.whitespace …`
         * `trailing-space` and `space-before-tab` turned on by default
