@@ -792,6 +792,152 @@ All the options your version of Git recognizes: `git config --help`.
 * `receive.denyNonFastForwards true|false`
 * `receive.denyDeletes true|false`
 
+## 7.2 Git Attributes
+
+Git attributes are set either in a `.gitattributes` file in one of your directories (normally the root of your project) or in the `.git/info/attributes` file if you don’t want the attributes file committed with your project.
+
+## 7.2.1 Binary Files
+
+### Identifying Binary Files
+
+Set Xcode project file **.pbxproj** as binary file in `.gitattributes`: `*.pbxproj -crlf -diff` or `*.pbxproj binary` if Git version >= 1.6
+
+### Diffing Binary Files
+
+How to: tell git how to convert your binary data into a text format.
+
+#### Example1: word
+
+Use `strings` as the converting program: 
+
+1. add `*.doc diff=word` to `.gitattributes` file so that all doc files will use word filter;
+2. set the word-to-text converting program: `git config diff.word.textconv strings`
+
+#### Example2: Image
+
+Extract the EXIF data as the text:
+
+```
+$ echo ’*.png diff=exif’ >> .gitattributes$ git config diff.exif.textconv exiftool```
+
+## 7.2.2 Keyword Expansion
+
+By default, Git can't do keyword expansion as SVN do, because it checksums the file in the first place. However, you can inject a filter program to do keyword expansion.
+
+Firstly, you can inject the SHA–1 checksum of a blob into an `$Id$` field in the file automatically. Git will identify the `$ID$` keyword.
+
+Secondly, there're two kinds of filters: clean(commit) and smudge(checkout). Setup in `.gitattributes`: `date*.txt filter=dater`
+
+Config `dater` filter:
+
+```
+$ git config filter.dater.smudge expand_date$ git config filter.dater.clean ’perl -pe "s/\\\$Date[ˆ\\\$]*\\\$/\\\$Date\\\$/"’
+```
+
+Sample `expand_date` script:
+
+```
+#! /usr/bin/env rubydata = STDIN.readlast_date = ‘git log --pretty=format:"%ad" -1‘puts data.gsub(’$Date$’, ’$Date: ’ + last_date.to_s + ’$’)```
+
+## 7.2.3 Exporting Your Repository
+
+So some interesting things when exporting an archive of your project.
+
+### `export-ignore`
+
+Ignore some files or directories. Example of ignoring **text** directory: `test/ export-ignore` in `.gitattributes` file.
+
+### `export-subst`
+
+Some simple keyword substitution before archiving.
+
+Example: Git lets you put the string `$Format:$` in any file with any of the `--pretty=format` formatting shortcodes:
+
+```
+$ echo ’Last commit date: $Format:%cd$’ > LAST_COMMIT$ echo "LAST_COMMIT export-subst" >> .gitattributes$ git add LAST_COMMIT .gitattributes$ git commit -am ’adding LAST_COMMIT file for archives’```
+
+### 7.2.4 Merge Strategies
+
+One very useful option is to tell Git to not try to merge specific files when they have conflicts: `database.xml merge=ours` in `.gitattributes`.
+
+## 7.3 Git Hooks
+
+Like many other Version Control Systems, Git has a way to fire off custom scripts when certain important actions occur. There're two kinds of hooks: client-side hook and server-side hook.
+
+## 7.3.1 Installing a Hook
+
+Hooks(scripts) are stored in the `./.git/hooks` directory. By default, therein exist several samples.
+
+## 7.3.2 Client-Side Hooks
+
+### Commit-Workflow Hooks
+
+#### `pre-commit` hook
+
+Run before you even type in a commit message. 
+
+#### `prepare-commit-msg` hook
+
+Run before the commit message editor is fired up but after the default message is created. Tt’s good for commits where the default message is auto-generated
+
+#### `commit-msg` hook
+
+It takes one parameter: the path to a temporary file that contains the current commit message. If this script exits non-zero, Git aborts the commit process.
+
+#### `post-commit` hook
+
+It doesn’t take any parameters, but you can easily get the last commit by running git log -1 HEAD. Generally, this script is used for notification or something similar.
+
+###E-mail Workflow Hooks
+
+They're all invoked by `git am` command.
+
+#### `applypatch-msg` hook
+
+A single argument: the name of the temporary file that contains the proposed commit message. Git aborts the patch if this script exits non-zero.
+
+#### `pre-applypatch` hook
+
+Takes no arguments and is run after the patch is applied, so you can use it to inspect or test the snapshot before making the commit.
+
+#### `post-applypatch` hook
+
+You can use it to notify a group or the author of the patch you pulled in that you’ve done so. You can’t stop the patching process with this script.
+
+### Other Client Hooks
+
+#### `pre-rebase`
+
+Usage: disallow rebasing any commits that have already been pushed.
+
+#### `post-checkout`
+
+Usage: setup environment.
+
+#### `post-merge`
+
+Usage: validate some files that are not version-controlled by Git.
+
+## 7.3.3 Server-Side Hooks
+
+#### `pre-receive`
+
+#### `post-receive`
+
+#### `update`
+
+Similar to the `pre-receive` script, except that it’s run once for **each branch** the pusher is trying to update. If the pusher is trying to push to multiple branches, pre-receive runs only once, whereas update runs once per branch they’re pushing to.
+
+
+
+
+
+
+
+
+
+
+
 
 
 
