@@ -886,7 +886,7 @@ It takes one parameter: the path to a temporary file that contains the current c
 
 #### `post-commit` hook
 
-It doesn’t take any parameters, but you can easily get the last commit by running git log -1 HEAD. Generally, this script is used for notification or something similar.
+It doesn’t take any parameters, but you can easily get the last commit by running `git log -1 HEAD`. Generally, this script is used for notification or something similar.
 
 ###E-mail Workflow Hooks
 
@@ -928,17 +928,175 @@ Usage: validate some files that are not version-controlled by Git.
 
 Similar to the `pre-receive` script, except that it’s run once for **each branch** the pusher is trying to update. If the pusher is trying to push to multiple branches, pre-receive runs only once, whereas update runs once per branch they’re pushing to.
 
+## Chapter8 Git and Other Systems
 
+## 8.1 Git and Subversion
 
+### `git svn`
 
+When using git svn, you’re interacting with Subversion. 
 
+**NOTE**: Subversion can have only a single linear history, and confusing it is very easy. It’s generally best to keep your history as linear as possible
 
+### `git svn clone` 
 
+Clone from a svn repo. It's equivalent to `git svn init` + `git svn fetch`.
 
+`-T trunk -b branches -t tags` option tells Git that this Subversion repository follows the basic branching and tagging conventions. Or equivalently, use `-s` option.
 
+### `git svn dcommit`
 
+After locally commit by `git commit`, you can push the changes to svn repo by this command.
 
+**NOTE**: `git svn dcommit` will rewrite your local Git commit to include a unique identifier, which means the SHA-1 of the commit will change. If you want to push to both a Git server and a Sub- version server, you have to push (dcommit) to the Subversion server first, because that action changes your commit data.
 
+### `git svn rebase`
+
+Pull down any changes on the server.
+
+**NOTE**: Unlike Git which requires you to merge upstream work you don't yet have locally before you push, `git svn` makes you do that only if the changes conflict.
+
+So, running git svn rebase every once in a while makes sure your code is always up to date.
+
+## 8.1.8 Switching Active Branches
+
+**NOTE**: the `dcommit` makes your `git merge` result look like you ran `git merge --squash`. To avoid issues, you should delete the local branch after you merge it into trunk.
+
+## 8.1.9 Subversion Commands
+
+#### `git svn log`
+
+1. It works offline;
+2. Only show commits that have been committed to the server.
+
+#### `git svn blame`
+
+like `git blame`
+
+#### `git svn info`
+
+Get SVN server info.
+
+#### `git svn create-ignore`
+
+Automaticallycreatescorresponding.gitignore files for you so your next commit can include them.
+
+#### `git svn show-ignore`
+
+Prints to stdout the lines you need to put in a `.gitignore` file.
+
+## 8.1.10 Git-Svn Summary
+
+Guidelikes:
+
+* Keep a linear Git history that doesn’t contain merge commits made by `git merge`. Rebase any work you do outside of your mainline branch back onto it; don’t merge it in.* Don’t set up and collaborate on a separate Git server. Possibly have one to speed up clones for new developers, but don’t push anything to it that doesn’t have a `git-svn-id` entry. You may even want to add a `pre-receive` hook that checks each commit message for a `git-svn-id` and rejects pushes that contain commits without it.
+
+## 8.2 Migrating to Git
+
+## 8.2.2 Migrating from Subversion
+
+`git svn clone` will do most of the work, except:
+
+#### author information
+
+Create a file called `users.txt` that has this mapping in a format like this:
+
+```schacon = Scott Chacon <schacon@geemail.com>selse = Someo Nelse <selse@geemail.com>
+```
+
+Then:
+
+```
+$ git-svn clone http://my-project.googlecode.com/svn/ \      --authors-file=users.txt --no-metadata -s my_project```
+
+#### `post-import` cleanup
+
+* Move the tags(remote branches) to proper Git tags:
+
+```
+$ cp -Rf .git/refs/remotes/tags/* .git/refs/tags/$ rm -Rf .git/refs/remotes/tags
+```
+
+This takes the references that were remote branches that started with tag/ and makes them real (lightweight) tags.
+
+* move the rest of the references under refs/remotes to be local branches:
+
+```
+$ cp -Rf .git/refs/remotes/* .git/refs/heads/$ rm -Rf .git/refs/remotes```
+
+* push **all** the branches and tags to the server: `git push origin --all`
+
+## 8.2.2 Migrating from Perforce
+
+#### Get tool
+
+Not available by default. Locate in the `contrib` subdir of git source code:
+
+```
+$ git clone git://git.kernel.org/pub/scm/git/git.git$ cd git/contrib/fast-import```In this `fast-import` dir, there's a Python script: `git-p4`.
+
+* setup environment
+
+```
+$ export P4PORT=public.perforce.com:1666
+```
+
+* run `git-p4 clone`
+
+```
+$ git-p4 clone //public/jam/src@all /opt/p4import
+```
+
+You can do some cleanup, like perforce identifier in msg, by using `git filter-branch`.
+
+## 8.2.4 A Custom Importer
+
+1. Look for an importer online;
+2. If none works, use `git fast-import` tool. It reads simple instructions from stdin to write specific Git data.
+
+## Chapter9 Git Internals
+
+## 9.1 Plumbing and Porcelain
+
+The `objects` directory stores all the content for your database.
+
+The `refs` directory stores pointers into commit objects in that data (branches).
+
+The `HEAD` file points to the branch you currently have checked out.
+
+The `index` file is where Git stores your staging area information. 
+
+## 9.2 Git Objects
+
+Tt the core of Git is a simple key-value data store.
+
+### Hash Objects
+
+```
+$ echo ’test content’ | git hash-object -w --stdin
+$ find .git/objects -type f.git/objects/d6/70460b4b4aece5915caf5c68d12f560a9fe3e4
+```
+
+The subdirectory is named with the **first 2 characters** of the SHA, and the filename is the remaining 38 characters.
+
+### Retrieve Content
+
+```
+$ git cat-file -p d670460b4b4aece5915caf5c68d12f560a9fe3e4
+test content
+```
+
+### Show Object Type
+
+```
+$ git cat-file -t 1f7a7a472abf3dd9643fd615f6da379c4acb3e3ablob
+```
+
+## 9.2.1 Tree Objects
+
+All the content is stored as tree and blob objects, with trees corresponding to UNIX directory entries and blobs corresponding more or less to inodes or file contents. 
+
+`git cat-file -p masterˆ{tree}`: masterˆ{tree} syntax specifies the tree object that is pointed to by the last com- mit on your master branch.
 
 
 
