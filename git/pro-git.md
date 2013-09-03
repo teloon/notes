@@ -1183,4 +1183,57 @@ Set tag: `git update-ref refs/tags/v1.0 {SHA-1}`.
 
 Locate in `.git/refs/remotes/`. It stores the value you last pushed to that remote for each branch.
 
+## 9.4 Git Packfiles
+
+Git will occasionally repack your database automatically, or run the `git gc` command manually.
+
+See what was packed up:
+
+```
+$ git verify-pack -v pack-7a16e4488ae40c7d2bc56ea2bd43e25212a66c45.idx
+```
+
+Git will store the latest version as a whole for the sake of speed, whereas the older is stored as a delta.
+
+## 9.5 The Refspec
+
+Example:
+
+```
+[remote "origin"]       url = git@github.com:schacon/simplegit-progit.git       fetch = +refs/heads/*:refs/remotes/origin/*
+```
+
+It means "fetche all the references under `refs/heads/` on the server and writes them to `refs/remotes/origin/` locally".
+
+`+` tells Git to update the reference even if it isn’t a fast-forward.
+
+These are equivalent:
+
+```
+$ git log origin/master$ git log remotes/origin/master$ git log refs/remotes/origin/master```
+
+Or specify the refspec on the command line:
+
+```
+$ git fetch origin master:refs/remotes/origin/mymaster
+```
+
+You can’t use partial globs in the pattern, like **refs/heads/qa***. But can namespace them to get the same effect:
+
+```
+fetch = +refs/heads/qa/*:refs/remotes/origin/qa/*
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
