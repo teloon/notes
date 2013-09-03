@@ -979,7 +979,7 @@ Get SVN server info.
 
 #### `git svn create-ignore`
 
-Automaticallycreatescorresponding.gitignore files for you so your next commit can include them.
+Automatically create corresponding `.gitignore` files for you so your next commit can include them.
 
 #### `git svn show-ignore`
 
@@ -1096,7 +1096,91 @@ $ git cat-file -t 1f7a7a472abf3dd9643fd615f6da379c4acb3e3ablob
 
 All the content is stored as tree and blob objects, with trees corresponding to UNIX directory entries and blobs corresponding more or less to inodes or file contents. 
 
-`git cat-file -p masterˆ{tree}`: masterˆ{tree} syntax specifies the tree object that is pointed to by the last com- mit on your master branch.
+### Show Tree Object
 
+`git cat-file -p masterˆ{tree}`: masterˆ{tree} syntax specifies the tree object that is pointed to by the last commit on your master branch.
+
+### Create Tree
+
+```
+$ git update-index --add --cacheinfo 100644 \  83baae61804e65cc73a7201a7252750c76066a30 test.txt```
+
+* `--add` option because the file doesn’t yet exist in your staging area;
+* `--cacheinfo` because the file you’re adding isn’t in your directory but is in your database.
+* Mode of `100644` means it’s a normal file. `100755` for executable file. `120000` for symbolic link.
+
+```
+$ git write-treed8329fc1cc938780ffdd9f94e0d364e0ea74f579$ git cat-file -p d8329fc1cc938780ffdd9f94e0d364e0ea74f579100644 blob 83baae61804e65cc73a7201a7252750c76066a30    test.txt
+```
+
+* `write-tree`(without `-w`) to write the staging area out to a tree.
+
+```
+$ git read-tree --prefix=bak d8329fc1cc938780ffdd9f94e0d364e0ea74f579$ git write-tree3c4e9cd789d88d8d89c1073707c3585e41b0e614$ git cat-file -p 3c4e9cd789d88d8d89c1073707c3585e41b0e614040000 tree d8329fc1cc938780ffdd9f94e0d364e0ea74f579      bak100644 blob fa49b077972391ad58037050f2a75f74e3671e92      new.txt100644 blob 1f7a7a472abf3dd9643fd615f6da379c4acb3e3a      test.txt```
+
+* `read-tree` reads trees into your staging area.
+* `--prefix`: read an existing tree into your staging area as a subtree.
+
+## 9.2.2 Commit Objects
+
+Create commit objects:
+
+```
+$ echo ’first commit’ | git commit-tree d8329ffdf4fc3344e67ab068f836878b6c4951e3b15f3d
+```
+
+or there's commit directly before it:
+
+```
+$ echo ’second commit’ | git commit-tree 0155eb -p fdf4fc3cac0cab538b970a37ea1e769cbbde608743bc96d```
+This is essentially what Git does when you run the `git add` and `git commit` commands:
+* It stores blobs for the files that have changed
+* updates the index
+* writes out trees
+* writes commit objects that reference the top-level trees and the commits that came immediately before them. 
+
+These three main Git objects — the blob, the tree, and the commit — are initially stored in `.git/objects` directory.
+
+## 9.2.3 Object Storage
+
+The format of object is basically header+content:
+
+```
+{FILE_TYPE} {CONTENT_LENGTH}\000
+{CONTENT}
+```
+
+Then compress the whole thing with zlib and write to the `.git/objects` directory.
+
+## 9.3 Git References
+
+All references locates in: `.git/refs/`.
+
+Edit reference:
+
+* Edit `/git/refs/`. Not recommend.
+* `git update-ref refs/heads/master {SHA-1}`. Safer way.
+
+`git branch {BRANCH_NAME}`: Git basically runs that `update-ref` command to add the SHA–1 of the **last commit** of the branch you’re on into whatever new reference you want to create.
+
+## 9.3.1 The HEAD
+
+How do you know **last commit** of the branch you’re on? By HEAD.
+
+Locate in `.git/HEAD/`. The HEAD file is a symbolic reference to the branch you’re currently on.
+
+Safely read HEAD: `git symbolic-ref HEAD`.
+
+Safely set HEAD: `git symbolic-ref HEAD refs/heads/test`.
+
+## 9.3.2 Tags
+
+The tag object is very much like a commit object except that a tag object points to a commit rather than a tree. Locate in `.git/refs/tags`.
+
+Set tag: `git update-ref refs/tags/v1.0 {SHA-1}`.
+
+## 9.3.3 Remotes
+
+Locate in `.git/refs/remotes/`. It stores the value you last pushed to that remote for each branch.
 
 
