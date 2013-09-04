@@ -1224,9 +1224,23 @@ You can’t use partial globs in the pattern, like **refs/heads/qa***. But can n
 fetch = +refs/heads/qa/*:refs/remotes/origin/qa/*
 ```
 
+## 9.6 Transfer Protocols
 
+Two major ways:
+* over HTTP
+* via the so-called smart protocols used in the `file://`, `ssh://`, and `git://` transports.
 
+## 9.6.1 The Dumb Protocol -- HTTP
 
+It requires no Git-specific code on the server side during the transport process, only a series of GET requests.
+
+Clone process:
+
+1. fetch refs;
+2. fetch HEAD
+3. get the branch name that the HEAD points to
+4. fetch latest commit object of the current branch
+5. rebuild the whole history by track from the commit object in 4 -- tree object and parent commit object.
 
 
 
