@@ -1203,7 +1203,7 @@ Example:
 [remote "origin"]       url = git@github.com:schacon/simplegit-progit.git       fetch = +refs/heads/*:refs/remotes/origin/*
 ```
 
-It means "fetche all the references under `refs/heads/` on the server and writes them to `refs/remotes/origin/` locally".
+It means "fetch all the references under `refs/heads/` on the server and writes them to `refs/remotes/origin/` locally".
 
 `+` tells Git to update the reference even if it isn’t a fast-forward.
 
@@ -1237,17 +1237,91 @@ It requires no Git-specific code on the server side during the transport process
 Clone process:
 
 1. fetch refs;
-2. fetch HEAD
-3. get the branch name that the HEAD points to
-4. fetch latest commit object of the current branch
-5. rebuild the whole history by track from the commit object in 4 -- tree object and parent commit object.
+2. fetch HEAD and get the branch name that the HEAD points to
+3. fetch latest commit object of the current branch
+4. rebuild the whole history by track from the latest commit object -- tree object and parent commit object.
 
+## 9.6.2 The Smart Protocol
 
+HTTP method is a bit inefficient.
 
+Smart protocols have a process on the remote end that is intelligent about Git:
 
+### Uploading Data
 
+The `send-pack` process runs on the client and connects to a `receive-pack` process on the remote side.
 
+### Downloading Data
 
+The client initiates a `fetch-pack` process that connects to an `upload-pack` process on the remote side to negotiate what data will be transferred down.
 
+## 9.7.1 Maintenance
 
+What `git gc --auto` do:
+
+1. it gathers up all the loose objects and places them in packfiles. 
+2. it consolidates packfiles into one big packfile
+3. it removes objects that aren’t reachable from any commit and are a few months old.
+
+**NOTE**: You must have around 7,000 loose objects or more than 50 packfiles for Git to fire up a real `gc` command. You can modify these limits with the `gc.auto` and `gc.autopacklimit` config settings, respectively.
+
+## 9.7.2 Data Recovery
+
+### `git reflog`
+
+Git silently records what your HEAD is every time you change it. Each time you commit or change branches, the reflog is updated.
+
+`git log -g` will give you a normal log output for your reflog. Then you can recover the lost commit by creating a new branch at that commit: `git branch recover-branch ab1afef`.
+
+The reflog data is kept in `.git/logs/`.
+
+### `git fsck`
+
+If the reflog data is lost, then `git fsck`, which checks your database for integrity, can help.
+
+`--full` option shows you all objects that aren’t pointed to by another object.
+
+## 9.7.3 Removing Objects
+
+Problem: a git clone downloads the entire history of the project, including every version of every file. If there's a huge file, …
+
+**Warn**: this technique is destructive to your commit history. It rewrites every commit object downstream from the earliest tree you have to modify to remove a large file reference. You have to notify all contributors that they must rebase their work onto your new commits.
+
+`git count-objects -v` to quickly see how much space you're using.
+
+### Find Out the Largest File
+
+```
+$ git verify-pack -v .git/objects/pack/pack-3f8c0...bb.idx | sort -k 3 -n | tail -3e3f094f522629ae358806b17daf78246c27c007b blob 1486 734 466705408d195263d853f09dca71d55116663690c27c blob 12908 3478 11897a9eb2fba2b1811321254ac360970fc169ba2330 blob 2056716 2056872 5401
+```
+
+Use `git rev-list` to find out what file it is. Pass the `--objects` to `rev-list` to list all the commit SHAs and also the blob SHAs with the file paths associated with them. 
+
+```
+$ git rev-list --objects --all | grep 7a9eb2fb7a9eb2fba2b1811321254ac360970fc169ba2330 git.tbz2```
+
+### Change History
+
+Find what commits modified that file:
+
+```
+$ git log --pretty=oneline -- git.tbz2da3f30d019005479c99eb4c3406225613985a1db oops - removed large tarball6df764092f3e7c8f5f94cbe08ee5cf42e92a0289 added git tarball```
+
+Remove that file from history:
+
+```
+$ git filter-branch --index-filter \   ’git rm --cached --ignore-unmatch git.tbz2’ -- 6df7640ˆ..Rewrite 6df764092f3e7c8f5f94cbe08ee5cf42e92a0289 (1/2)rm ’git.tbz2’Rewrite da3f30d019005479c99eb4c3406225613985a1db (2/2)Ref ’refs/heads/master’ was rewritten
+```
+
+`--index-filter` VS `--tree-filter` option:
+* `--index-filter` modifying your staging area or index and `--tree-filter` modifies files checked out on disk. So `--index-filter` is much faster
+* `--index-filter` removes some file with `git rm --cached` and `--tree-filter` does with `rm file`
+
+### Reference Cleanup 
+
+Your reflog and a new set of refs that Git added under `.git/refs/original` when you did the `filter-branch`, still contain a reference to that file. And repack at last.
+
+```
+$ rm -Rf .git/refs/original$ rm -Rf .git/logs/$ git gc
+```
 
