@@ -43,9 +43,9 @@ There're two ways to achieves this goal: `git reset` and `git revert`.
 
 ### `git revert HEAD~2`
 
-If you want to **share** the reversing with others, you neen to commit the reversing, which is what `git revert` does. This command will make a new commit that revert **to** the version of `HEAD~2`.
+If you want to **share** the reversing with others, you need to commit the reversing, which is what `git revert` does. This command will make a new commit that revert **to** the version of `HEAD~2`.
 
-Locally, in the perspective of the final result, `git reset HEAD~2` is euqal to `git revert HEAD~2`.
+Locally, in the perspective of the final result, `git reset HEAD~2` is equal to `git revert HEAD~2`.
 
 ##move commits
 
