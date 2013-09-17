@@ -482,7 +482,7 @@ See reflog formatted like the `git log` output:
 $ git log -g master
 commit 734713bc047d87bf7eac9674765ae793478c50d3
 Reflog: master@{0} (Scott Chacon <schacon@gmail.com>)
-Reflog message: commit: fixed refs handling, added gc auto, updated
+Reflog message: commit: fixed refs handling, added gøc auto, updated
 Author: Scott Chacon <schacon@gmail.com>
 Date:   Fri Jan 2 18:32:33 2009 -0800
     fixed refs handling, added gc auto, updated tests
